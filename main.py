@@ -21,10 +21,11 @@ The 2 classes will be ID() and Server()
     Server --> class that takes requests, responds, updates CSV 
 
 TODO:
-    Have server respond with 404 and see if that resolves the reconnection issue
     Fix command line input
     Create optional command line argument to change default request location 
         parser should be able to handle it. It only looks at the second to last item in the url
+    I'd like to change the csv spec to include headers for human readibility when imported into spreadsheet applications
+    When inserting the html tag into thunderbird, it attempts to resolve the img as well. This could throw off the targeting of individuals. 
 
 """
 
@@ -155,6 +156,9 @@ Content-Length
 """
 class Server():
     def __init__(self, host='', port=56789, csvFileName='register.csv'):
+        
+        error404 = b"HTTP/1.1 404 Not Found\r\n\r\n"
+        
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.bind((host,int(port)))
             s.listen(1)
@@ -163,6 +167,9 @@ class Server():
                 with conn:
                     print("[*] Connected by", addr)
                     self.data = conn.recv(1024)
+                    
+                    conn.send(error404)
+                    
                     print("[DEBUGGING] raw data ", str(self.data.decode("utf-8")))
                     datalist = self.data.decode("utf-8").split(' ') # break down header
                     print("[DEBUGGING] data list [1]", datalist[1])
@@ -207,6 +214,7 @@ def usage():
         
     [!] -server, -newtag, -dump must be the first argument called
     [!] All parameters for an instance must be set
+    [!] Some email clients will attempt to resolve the image as well. It may be better if you're tracking individuals to start the server process after the email is sent
     
     I recommend you start the server as a daemon process (appending an & to the end in unix and disown)
     
