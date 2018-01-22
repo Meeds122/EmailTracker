@@ -10,7 +10,6 @@ clear image to satisfy and mark the email as opened.
 
 Basic architecture is 
     new = ID() --> new.generateID() --> new.generateTag(server, port) --> new.setName(name) --> print(new.getTag()) --> list.append(new) --> updateCSV(new)
-    Server() starts in its own thread
     Server goes and recieves HTTP requests fro the info and returns 1x1 img or it 404s
     the clients will be requesting emails from <SERVER>:<PORT>/trkr/<ID>.jpg
     
@@ -21,7 +20,11 @@ The 2 classes will be ID() and Server()
     ID() --> class with the ID, tag, and name associated
     Server --> class that takes requests, responds, updates CSV 
 
-I still need to implement a way to dump the file to console
+TODO:
+    Have server respond with 404 and see if that resolves the reconnection issue
+    Fix command line input
+    Create optional command line argument to change default request location 
+        parser should be able to handle it. It only looks at the second to last item in the url
 
 """
 
@@ -32,7 +35,6 @@ import socket
 import sys
 
 
-#email tracker UI functions
 
 class ID(object):
     internalCounter = 0 #ensures the uniqueness of hashes in same session jic internal clock is too slow    
