@@ -12,6 +12,15 @@ It uses the time and a unique classwide identifier for the instance to generate 
 the built in server class parses the GET request and increments the hit count for the hash in the .csv file. I would like to add the capabitiy to log
 the last hit time as well and have left that option in the csv file format specification.
 
-Current known issues are 
+Current known issues are
+ 
 -CLI problems and parsing issues.
+
 -Server instability
+
+-Some email clients continue to attempt to retrieve the file giving inacurate click numbers.
+
+	+ Bug found with thunderbird client. It attempts to connect 10 times before giving up
+	
+	+ Fix is probably to respond with a 404 error 
+	
