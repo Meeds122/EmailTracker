@@ -34,6 +34,7 @@ import hashlib
 import csv
 import socket
 import sys
+import signal
 
 
 
@@ -128,6 +129,11 @@ def dumpCSV(fileName):
     for i in csvlist:
         print(i[0][:8], ",", i[1], ",", i[2], ",", i[3])
 
+def sigHandler(sig, context):
+    print("CTRL-C entered... exiting")
+    exit(0)
+
+
 
 
 """
@@ -163,6 +169,7 @@ class Server():
             s.bind((host,int(port)))
             s.listen(1)
             while True:
+                signal.signal(signal.SIGINT, sigHandler)
                 conn, addr = s.accept()
                 with conn:
                     print("[*] Connected by", addr)
@@ -217,6 +224,7 @@ def usage():
     [!] Some email clients will attempt to resolve the image as well. It may be better if you're tracking individuals to start the server process after the email is sent
     
     I recommend you start the server as a daemon process (appending an & to the end in unix and disown)
+    To exit, ctrl-pause on a windows machine in cmd (I know, its a windows python thing)
     
     """)
 
