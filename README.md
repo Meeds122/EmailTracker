@@ -1,6 +1,4 @@
-This README will be updated eventually.
-
-Currently the software is in the ultra-beta stage and needs some major bug hunting and refinement before it gets used.
+Currently the software is in the beta stage and is perfectly usable with some manual work. Eventually I would like to include a GUI or webapp.
 
 If you want to contribute, please do so. The main.py file currently has all of my notes. 
 
@@ -13,11 +11,18 @@ the built in server class parses the GET request and increments the hit count fo
 the last hit time as well and have left that option in the csv file format specification.
 
 TODO:
+
 -Create optional command line argument to change default request location 
 parser should be able to handle it. It only looks at the second to last item in the url
+
 -I'd like to change the csv spec to include headers for human readibility when imported into spreadsheet applications
+
 -When inserting the html tag into thunderbird, it attempts to resolve the img as well. This could throw off the targeting of individuals. 
+
 -Add last click time functionality
+
+-Webapp or GUI functionality. Probably in a seperate file
+
 
 
     Usage: mailtracker.py [OPTIONS]
