@@ -34,8 +34,6 @@ import hashlib
 import csv
 import socket
 import sys
-import signal
-
 
 
 class ID(object):
@@ -129,12 +127,6 @@ def dumpCSV(fileName):
     for i in csvlist:
         print(i[0][:8], ",", i[1], ",", i[2], ",", i[3])
 
-def sigHandler(sig, context):
-    print("CTRL-C entered... exiting")
-    exit(0)
-
-
-
 
 """
 class Server()
@@ -169,7 +161,6 @@ class Server():
             s.bind((host,int(port)))
             s.listen(1)
             while True:
-                signal.signal(signal.SIGINT, sigHandler)
                 conn, addr = s.accept()
                 with conn:
                     print("[*] Connected by", addr)
@@ -229,41 +220,45 @@ def usage():
     """)
 
 def main():
-    if len(sys.argv[1:]) < 2:
-        usage()
-        exit(0)
-    elif sys.argv[1] == "-server":
-        if len(sys.argv[1:]) != 5:
-            print("[!] Syntax error, missing options")
-            exit(1)
-        args = sys.argv[1:]
-        aport = str(args[args.index('-port') + 1])
-        fname = str(args[args.index('-csvfile') + 1])
-        s = Server(port=aport, csvFileName=fname, host='')
-    elif sys.argv[1] == "-newtag":
-        if len(sys.argv[1:]) != 9:
-            print("[!] Syntax error, missing options")
-            exit(1)
-        #deconstruct command line args
-        args = sys.argv[1:]
-        name = str(args[args.index('-name') + 1])
-        server = str(args[args.index('-server') + 1])
-        port = str(args[args.index('-port') + 1])
-        fname = str(args[args.index('-csvfile') + 1])
-        new = ID()
-        new.setName(name)
-        new.generateID()
-        print(new.generateTag(server,port))
-        if updateCSV(fname, new.getID(), name, '0', '0'):
-            print('[*] CSV file sucessfully updated')
+    try:
+        if len(sys.argv[1:]) < 2:
+            usage()
             exit(0)
-        print('[!] Error updating CSV file')
-        exit(1)
-    elif sys.argv[1] == "-dump":
-        fname = sys.argv[2]
-        dumpCSV(fname)
-        exit(0)
-    else:
+        elif sys.argv[1] == "-server":
+            if len(sys.argv[1:]) != 5:
+                print("[!] Syntax error, missing options")
+                exit(1)
+                args = sys.argv[1:]
+                aport = str(args[args.index('-port') + 1])
+                fname = str(args[args.index('-csvfile') + 1])
+                s = Server(port=aport, csvFileName=fname, host='')
+        elif sys.argv[1] == "-newtag":
+            if len(sys.argv[1:]) != 9:
+                print("[!] Syntax error, missing options")
+                exit(1)
+            #deconstruct command line args
+            args = sys.argv[1:]
+            name = str(args[args.index('-name') + 1])
+            server = str(args[args.index('-server') + 1])
+            port = str(args[args.index('-port') + 1])
+            fname = str(args[args.index('-csvfile') + 1])
+            new = ID()
+            new.setName(name)
+            new.generateID()
+            print(new.generateTag(server,port))
+            if updateCSV(fname, new.getID(), name, '0', '0'):
+                print('[*] CSV file sucessfully updated')
+                exit(0)
+            print('[!] Error updating CSV file')
+            exit(1)
+        elif sys.argv[1] == "-dump":
+            fname = sys.argv[2]
+            dumpCSV(fname)
+            exit(0)
+        else:
+            usage()
+            exit(0)
+    except:
         usage()
         exit(0)
 
