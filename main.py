@@ -21,7 +21,6 @@ The 2 classes will be ID() and Server()
     Server --> class that takes requests, responds, updates CSV 
 
 TODO:
-    Fix command line input
     Create optional command line argument to change default request location 
         parser should be able to handle it. It only looks at the second to last item in the url
     I'd like to change the csv spec to include headers for human readibility when imported into spreadsheet applications
@@ -221,21 +220,18 @@ def usage():
 
 def main():
     try:
-        if len(sys.argv[1:]) < 2:
-            usage()
-            exit(0)
-        elif sys.argv[1] == "-server":
+        if sys.argv[1] == "-server":
             if len(sys.argv[1:]) != 5:
                 print("[!] Syntax error, missing options")
-                exit(1)
-                args = sys.argv[1:]
-                aport = str(args[args.index('-port') + 1])
-                fname = str(args[args.index('-csvfile') + 1])
-                s = Server(port=aport, csvFileName=fname, host='')
+                return
+            args = sys.argv[1:]
+            aport = str(args[args.index('-port') + 1])
+            fname = str(args[args.index('-csvfile') + 1])
+            Server(port=aport, csvFileName=fname, host='')
         elif sys.argv[1] == "-newtag":
             if len(sys.argv[1:]) != 9:
                 print("[!] Syntax error, missing options")
-                exit(1)
+                return
             #deconstruct command line args
             args = sys.argv[1:]
             name = str(args[args.index('-name') + 1])
@@ -248,16 +244,16 @@ def main():
             print(new.generateTag(server,port))
             if updateCSV(fname, new.getID(), name, '0', '0'):
                 print('[*] CSV file sucessfully updated')
-                exit(0)
+                return
             print('[!] Error updating CSV file')
-            exit(1)
+            return
         elif sys.argv[1] == "-dump":
             fname = sys.argv[2]
             dumpCSV(fname)
-            exit(0)
+            return
         else:
             usage()
-            exit(0)
+            return
     except:
         usage()
         exit(0)
